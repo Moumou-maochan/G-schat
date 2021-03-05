@@ -1,0 +1,108 @@
+<html lang="ja">
+<head>
+  <meta charset="UTF-8"/>
+  <title>LINE風チャット</title>
+  <link rel='stylesheet' href='style.css' type='text/css' media='all' />
+</head>
+<body>
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+
+
+  <!-- ▼LINE風ここから -->
+  <div class="line__container">
+    <!-- タイトル -->
+    <div class="line__title">
+      G'chat
+    </div>
+
+    <!-- ▼会話表示エリア scrollを外すと高さ固定解除 -->
+
+    <div class="line__contents scroll" id="output">
+
+      <!-- メッセージボックス自分 -->
+      <!-- <div class="msg_wrap">
+        <div class="msg_box">
+          <p class="msg_text">
+          v
+          </p>
+        </div>
+
+      </div> -->
+
+    </div>
+    <!--　▲会話エリア ここまで -->
+  
+  <!--　▲LINE風ここまで -->
+  <!-- 入力エリア -->
+  <div class=area_input>
+    <input id="msg" class="massage" name="massage" id="massage" cols="30" rows="10" placeholder="メッセージを入力してください">
+    <input id="submit" class="submit" name="submit" type="image" src="submit.png" alt="送信" align="right" >
+  </div>
+</div>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyD5e9dckrITfuUjZmlLQ_tiR_nlv-A-yzU",
+      authDomain: "g-chat-62506.firebaseapp.com",
+      projectId: "g-chat-62506",
+      storageBucket: "g-chat-62506.appspot.com",
+      messagingSenderId: "334193222632",
+      appId: "1:334193222632:web:3a83fb5eeb4d1fcc54ba5d"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+     //データベースに接続して、読み書きできるようにする
+  let ref = firebase.database().ref();
+    // 送信ボタンをクリックしたら
+    // データベースにデータを送信する
+
+
+    $("#submit").on("click",function(){
+      const msg = $("#msg").val();
+      ref.push(msg);
+    });
+
+    // データベースに追加されたときに
+    // データの更新を行う
+    ref.on("child_added", function(data){
+      const v = data.val(); // val()を使ってデータを取ってくる
+      const k = data.key;   // ユニークキーを取得
+      // v = {uname:"まお" text:"いいね"}
+      // const h = `<p>${v.msg}</p>`;
+      //<P>まお<br>いいね</P>
+      $("#output").append(
+        '<div class="msg_wrap"><div class="msg_box"><p class="msg_text">'+v+'</p></div></div>'
+      );
+
+      // ”<div class="msg_wrap">
+      //   <div class="msg_box">
+      //     <p class="msg_text">”
+      //     ＋v＋
+      //    ” </p>
+      //   </div>
+      // </div> ”
+    });
+
+    $("#text").on("keydown",function(e){
+      if(e.keyCode === 13){
+        const msg = $("#msg").val();
+        ref.push(msg);
+      }
+    }); 
+
+  </script>
+
+</body>
+
+</html>
